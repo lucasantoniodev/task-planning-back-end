@@ -15,4 +15,13 @@ export class PlanningRoomRepository {
 
     return plainToInstance(PlanningRoomEntity, planningRoomCreated);
   }
+
+  async findById(id: string): Promise<PlanningRoomEntity> {
+    const planningRoomCreated =
+      await this.prismaService.planningRoom.findUnique({
+        where: { id },
+      });
+
+    return plainToInstance(PlanningRoomEntity, planningRoomCreated);
+  }
 }

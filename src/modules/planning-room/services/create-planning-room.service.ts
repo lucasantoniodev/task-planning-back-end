@@ -6,7 +6,7 @@ import { plainToInstance } from 'class-transformer';
 import { UserResponseDto } from '../../user/dtos/response/user.response.dto';
 
 @Injectable()
-export class CreateRoomService {
+export class CreatePlanningRoomService {
   constructor(private readonly repository: PlanningRoomRepository) {}
 
   public async execute(

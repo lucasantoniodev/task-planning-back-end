@@ -4,6 +4,7 @@ import { PrismaModule } from '../../prisma/prisma.module';
 import { PlanningRoomModule } from './planning-room/planning-room.module';
 import { AuthMiddleware } from '../middlewares/auth.middleware';
 import { UserModule } from './user/user.module';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { UserModule } from './user/user.module';
     PrismaModule,
     PlanningRoomModule,
     UserModule,
+    TaskModule,
   ],
   controllers: [],
   providers: [],
