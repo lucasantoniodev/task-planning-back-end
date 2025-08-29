@@ -3,7 +3,7 @@ import { Exclude, Expose } from 'class-transformer';
 @Exclude()
 export class ParticipantPlanningRoomEntity {
   @Expose()
-  id: string;
+  id?: string;
 
   @Expose()
   userId: string;

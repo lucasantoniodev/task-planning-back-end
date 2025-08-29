@@ -30,7 +30,10 @@ model ParticipantPlanningRoom {
   user           User         @relation(fields: [userId], references: [id])
   planningRoomId String       @map("planning_room_id")
   planningRoom   PlanningRoom @relation(fields: [planningRoomId], references: [id])
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
 
+  @@unique([userId, planningRoomId])
   @@map("participant_planning_room")
 }
 

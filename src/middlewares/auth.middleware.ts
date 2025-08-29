@@ -28,8 +28,8 @@ export class AuthMiddleware implements NestMiddleware {
         } satisfies UpsertUserRequestDto),
       );
       next();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.log(error);
       return res.status(401).send('Token inválido');
     }
   }

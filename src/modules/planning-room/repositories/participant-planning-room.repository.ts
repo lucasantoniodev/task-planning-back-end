@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../prisma/prisma.service';
-import { PlanningRoomEntity } from '../entities/planning-room.entity';
 import { plainToInstance } from 'class-transformer';
 import { ParticipantPlanningRoomEntity } from '../entities/participant-planning-room.entity';
 
@@ -8,12 +7,13 @@ import { ParticipantPlanningRoomEntity } from '../entities/participant-planning-
 export class ParticipantPlanningRoomRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(participantPlanningRoomEntity: ParticipantPlanningRoomEntity) {
-    const participantPlanningRoomCreated =
-      await this.prismaService.participantPlanningRoom.create({
-        data: participantPlanningRoomEntity,
-      });
+  async create({ userId, planningRoomId }: ParticipantPlanningRoomEntity) {
+    const data = await this.prismaService.participantPlanningRoom.upsert({
+      where: { userId_planningRoomId: { userId, planningRoomId } },
+      update: { updatedAt: new Date() },
+      create: { userId, planningRoomId },
+    });
 
-    return plainToInstance(PlanningRoomEntity, participantPlanningRoomCreated);
+    return plainToInstance(ParticipantPlanningRoomEntity, data);
   }
 }

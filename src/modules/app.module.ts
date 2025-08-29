@@ -8,10 +8,10 @@ import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
+    UserModule,
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     PlanningRoomModule,
-    UserModule,
     TaskModule,
   ],
   controllers: [],
