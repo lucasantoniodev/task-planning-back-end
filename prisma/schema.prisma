@@ -14,27 +14,13 @@ datasource db {
 }
 
 model PlanningRoom {
-  id                      String                    @id @default(uuid())
-  title                   String
-  tasks                   Task[]
-  ownerId                 String                    @map("owner_id")
-  owner                   User                      @relation(fields: [ownerId], references: [id])
-  ParticipantPlanningRoom ParticipantPlanningRoom[]
+  id      String @id @default(uuid())
+  title   String
+  tasks   Task[]
+  ownerId String @map("owner_id")
+  owner   User   @relation(fields: [ownerId], references: [id])
 
   @@map("planning_room")
-}
-
-model ParticipantPlanningRoom {
-  id             String       @id @default(uuid())
-  userId         String       @map("user_id")
-  user           User         @relation(fields: [userId], references: [id])
-  planningRoomId String       @map("planning_room_id")
-  planningRoom   PlanningRoom @relation(fields: [planningRoomId], references: [id])
-  createdAt      DateTime     @default(now()) @map("created_at")
-  updatedAt      DateTime     @updatedAt @map("updated_at")
-
-  @@unique([userId, planningRoomId])
-  @@map("participant_planning_room")
 }
 
 model Task {
@@ -48,13 +34,12 @@ model Task {
 }
 
 model User {
-  id                       String                    @id @default(uuid())
-  uid                      String                    @unique
-  name                     String
-  email                    String?
-  coins                    Int                       @default(0)
-  PlanningRoom             PlanningRoom[]
-  ParticipantsPlanningRoom ParticipantPlanningRoom[]
+  id           String         @id @default(uuid())
+  uid          String         @unique
+  name         String
+  email        String?
+  coins        Int            @default(0)
+  PlanningRoom PlanningRoom[]
 
   @@map("user")
 }

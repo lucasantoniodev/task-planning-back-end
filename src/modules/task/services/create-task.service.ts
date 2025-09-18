@@ -17,14 +17,10 @@ export class CreateTaskService {
   public async execute(
     requestBody: CreateTasksRequestDto,
   ): Promise<TaskResponseDto[]> {
-    await this.findByIdPlanningRoomService.execute(
-      requestBody.tasks[0].planningRoomId,
-    );
+    await this.findByIdPlanningRoomService.execute(requestBody.planningRoomId);
 
-    const taskCreated = await this.repository.create(requestBody.tasks);
-    const taskIaCreate = await this.taskPlanningIaIntegration.createTaskToIa(
-      requestBody.tasks,
-    );
+    const taskCreated = await this.repository.create([requestBody]);
+    await this.taskPlanningIaIntegration.createTaskToIa([requestBody]);
 
     return plainToInstance(TaskResponseDto, taskCreated);
   }

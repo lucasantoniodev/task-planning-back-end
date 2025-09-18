@@ -9,6 +9,7 @@ export class FindByIdPlanningRoomService {
 
   public async execute(id: string): Promise<PlanningRoomResponseDto> {
     const planningRoom = await this.repository.findById(id);
+
     if (!planningRoom) {
       throw new HttpException(
         {
@@ -18,6 +19,7 @@ export class FindByIdPlanningRoomService {
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
+
     return plainToInstance(PlanningRoomResponseDto, planningRoom);
   }
 }

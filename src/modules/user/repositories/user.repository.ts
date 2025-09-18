@@ -14,7 +14,7 @@ export class UserRepository {
       update: { name: user.name, email: user.email },
       create: {
         uid: user.uid,
-        name: user.name,
+        name: user.name ?? '',
         email: user.email,
         coins: 0,
       },

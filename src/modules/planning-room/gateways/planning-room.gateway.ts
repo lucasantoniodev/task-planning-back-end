@@ -12,14 +12,11 @@ import { Server, Socket } from 'socket.io';
 import { FirebaseAuthGuard } from '../../../guards/firebase-auth/firebase-auth.guard';
 import { UseFilters, UseGuards } from '@nestjs/common';
 import { RoomState } from '../interfaces/room-state.interface';
-import { JoinToPlanningRoomService } from '../services/join-to-planning-room.service';
 import { PlanningRoomExceptionFilter } from './planning-room-exception.filter';
 import { UserResponseDto } from '../../user/dtos/response/user.response.dto';
+import { FindAllTasksService } from '../../task/services/find-all-tasks.service';
 
 type JoinPayload = { roomId: string };
-type VotePayload = { roomId: string; value: string | number | null };
-type StoryPayload = { roomId: string; story?: string };
-type RoomOnly = { roomId: string };
 
 @UseGuards(FirebaseAuthGuard)
 @UseFilters(PlanningRoomExceptionFilter)
@@ -31,16 +28,14 @@ export class PlanningRoomGateway
 
   private rooms = new Map<string, RoomState>();
 
-  constructor(
-    private readonly joinToPlanningRoomService: JoinToPlanningRoomService,
-  ) {}
+  constructor(private readonly findAllTasksService: FindAllTasksService) {}
 
   handleConnection() {}
 
   handleDisconnect() {}
 
   @SubscribeMessage('room:join')
-  async onJoin(
+  async execute(
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: JoinPayload,
   ) {
@@ -49,36 +44,50 @@ export class PlanningRoomGateway
 
     await client.join(roomId);
 
-    const response = await this.joinToPlanningRoomService.execute(
-      user.id,
-      roomId,
-    );
+    let room = this.rooms.get(roomId);
 
-    if (!response) {
-      await client.leave(roomId);
-      return client.emit('room:info:user', {
-        message: `Não foi possível acessar a sala com ID ${roomId}`,
-      });
+    if (!room) {
+      room = {
+        id: roomId,
+        players: new Map(),
+      };
+
+      this.rooms.set(roomId, room);
     }
 
-    client.emit('room:info:user', {
-      message: `Você entrou na sala com ID: ${roomId} com sucesso!`,
+    room.players.set(user.id, {
+      id: user.id,
+      name: user.name,
+      joinedAt: Date.now(),
     });
 
-    this.server.to(roomId).emit('room:info', {
+    const tasks = await this.findAllTasksService.execute({
+      planningRoomId: roomId,
+    });
+
+    client.emit('room:task:list', tasks);
+
+    this.server.to(roomId).emit('room:alerts', {
       message: `${user.name} entrou na sala!`,
     });
+
+    this.broadcastRoomState(roomId);
   }
 
-  private serialize(room: RoomState, currentPlayerId?: string) {
+  private broadcastRoomState(roomId: string) {
+    const room = this.rooms.get(roomId);
+
+    if (!room) return;
+
+    this.server.to(roomId).emit('room:state', this.serialize(room));
+  }
+
+  private serialize(room: RoomState) {
     return {
       id: room.id,
-      revealed: room.revealed,
-      story: room.story ?? null,
       players: Array.from(room.players.values()).map((p) => ({
         id: p.id,
         name: p.name,
-        vote: room.revealed ? p.vote : p.id === currentPlayerId ? p.vote : null,
         joinedAt: p.joinedAt,
       })),
     };
