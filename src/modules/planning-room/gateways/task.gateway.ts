@@ -76,6 +76,26 @@ export class TaskGateway {
 
     task.players.add(user.id);
 
-    this.server.to(taskId).emit('room:task:state', this.taskState);
+    this.server.to(taskId).emit(`room:task:${taskId}`, this.taskState);
+  }
+
+  @SubscribeMessage('room:task:leave')
+  async leaveTask(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: { taskId: string },
+  ) {
+    const { taskId } = payload;
+
+    const user: UserResponseDto = client.data.user;
+
+    await client.leave(taskId);
+
+    const task = this.taskState.get(taskId);
+
+    if (task) {
+      task.players.delete(user.id);
+
+      this.server.to(taskId).emit(`room:task:${taskId}`, this.taskState);
+    }
   }
 }

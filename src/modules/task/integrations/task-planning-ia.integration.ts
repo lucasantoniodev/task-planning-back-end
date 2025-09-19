@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IntegrationService } from '../../integration/integration.service';
-import { TaskRequestDto } from '../dtos/request/create-tasks-request.dto';
+import { CreateTasksRequestDto } from '../dtos/request/create-tasks-request.dto';
 
 @Injectable()
 export class TaskPlanningIaIntegration {
@@ -8,7 +8,7 @@ export class TaskPlanningIaIntegration {
 
   constructor(private readonly integrationService: IntegrationService) {}
 
-  async createTaskToIa(requestBody: TaskRequestDto[]) {
+  async createTaskToIa(requestBody: CreateTasksRequestDto[]) {
     const { data } = await this.integrationService.post(
       `${TaskPlanningIaIntegration.BASE_URL}/ai/tasks`,
 
