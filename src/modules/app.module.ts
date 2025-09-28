@@ -19,6 +19,6 @@ import { TaskModule } from './task/task.module';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('*');
+    consumer.apply(AuthMiddleware).forRoutes('api/*');
   }
 }

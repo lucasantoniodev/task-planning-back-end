@@ -20,7 +20,7 @@ type JoinPayload = { roomId: string };
 
 @UseGuards(FirebaseAuthGuard)
 @UseFilters(PlanningRoomExceptionFilter)
-@WebSocketGateway()
+@WebSocketGateway({ cors: { origin: '*' } })
 export class PlanningRoomGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
@@ -40,6 +40,7 @@ export class PlanningRoomGateway
     @MessageBody() payload: JoinPayload,
   ) {
     const { roomId } = payload;
+
     const user: UserResponseDto = client.data.user;
 
     await client.join(roomId);
