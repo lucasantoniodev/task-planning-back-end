@@ -12,7 +12,10 @@ export class UserEntity {
   name: string;
 
   @Expose()
-  email?: string;
+  email: string;
+
+  @Expose()
+  photoUrl: string;
 
   @Expose()
   coins: number;

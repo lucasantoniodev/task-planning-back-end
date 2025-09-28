@@ -24,7 +24,8 @@ export class AuthMiddleware implements NestMiddleware {
         plainToInstance(UpsertUserRequestDto, {
           uid: decodedToken.uid,
           name: decodedToken.name,
-          email: decodedToken.email,
+          email: decodedToken.email ?? '',
+          photoUrl: decodedToken.photoUrl ?? '',
         } satisfies UpsertUserRequestDto),
       );
       next();

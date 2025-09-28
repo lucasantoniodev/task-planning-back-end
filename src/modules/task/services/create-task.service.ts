@@ -20,8 +20,13 @@ export class CreateTaskService {
     await this.findByIdPlanningRoomService.execute(requestBody.planningRoomId);
 
     const taskCreated = await this.repository.create([requestBody]);
-    await this.taskPlanningIaIntegration.createTaskToIa([requestBody]);
 
-    return plainToInstance(TaskResponseDto, taskCreated);
+    try {
+      await this.taskPlanningIaIntegration.createTaskToIa([requestBody]);
+      return plainToInstance(TaskResponseDto, taskCreated);
+    } catch (error) {
+      await this.repository.delete(taskCreated.map((task) => task.id));
+      throw error;
+    }
   }
 }

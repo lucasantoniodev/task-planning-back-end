@@ -22,4 +22,12 @@ export class TaskRepository {
   public async findAll(filters: FindAllTasksQueryDto) {
     return this.prismaService.task.findMany({ where: filters });
   }
+
+  public async delete(ids: string[]) {
+    await this.prismaService.task.deleteMany({
+      where: {
+        id: { in: ids },
+      },
+    });
+  }
 }

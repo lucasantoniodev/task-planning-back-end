@@ -12,11 +12,9 @@ export class FirebaseAuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const client = context.switchToWs().getClient();
-    const requestToken: string =
-      client.handshake.auth?.token ??
-      client.handshake.headers?.authorization ??
-      '';
-    const token: string = requestToken.split(' ')[1];
+    const authToken: string = client.handshake.auth?.token;
+    const requestToken: string = client.handshake.headers?.authorization ?? '';
+    const token: string = authToken ?? requestToken.split(' ')[1];
 
     try {
       const decodedToken = await admin.auth().verifyIdToken(token);
@@ -24,7 +22,8 @@ export class FirebaseAuthGuard implements CanActivate {
         plainToInstance(UpsertUserRequestDto, {
           uid: decodedToken.uid,
           name: decodedToken.name,
-          email: decodedToken.email,
+          email: decodedToken.email ?? '',
+          photoUrl: decodedToken.photoUrl ?? '',
         } satisfies UpsertUserRequestDto),
       );
 

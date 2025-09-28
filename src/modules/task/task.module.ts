@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TaskController } from './controllers/create-task.controller';
 import { CreateTaskService } from './services/create-task.service';
 import { TaskPlanningIaIntegration } from './integrations/task-planning-ia.integration';
@@ -7,6 +7,7 @@ import { IntegrationModule } from '../integration/integration.module';
 import { FindByIdPlanningRoomService } from '../planning-room/services/find-by-id-planning-room.service';
 import { PlanningRoomRepository } from '../planning-room/repositories/planning-room.repository';
 import { FindAllTasksService } from './services/find-all-tasks.service';
+import { AuthMiddleware } from '../../middlewares/auth.middleware';
 
 @Module({
   imports: [IntegrationModule],
@@ -26,4 +27,8 @@ import { FindAllTasksService } from './services/find-all-tasks.service';
     TaskRepository,
   ],
 })
-export class TaskModule {}
+export class TaskModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware).forRoutes(TaskController);
+  }
+}
