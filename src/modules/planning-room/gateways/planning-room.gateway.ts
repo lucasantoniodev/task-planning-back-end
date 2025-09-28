@@ -59,6 +59,7 @@ export class PlanningRoomGateway
     room.players.set(user.id, {
       id: user.id,
       name: user.name,
+      photoUrl: user.photoUrl,
       joinedAt: Date.now(),
     });
 
