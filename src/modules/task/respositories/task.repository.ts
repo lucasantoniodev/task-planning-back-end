@@ -19,6 +19,12 @@ export class TaskRepository {
     return plainToInstance(TaskEntity, taskCreated);
   }
 
+  public async findById(id: string): Promise<TaskEntity | null> {
+    return this.prismaService.task.findUnique({
+      where: { id },
+    });
+  }
+
   public async findAll(filters: FindAllTasksQueryDto) {
     return this.prismaService.task.findMany({ where: filters });
   }

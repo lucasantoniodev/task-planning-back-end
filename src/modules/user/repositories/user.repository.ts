@@ -11,13 +11,8 @@ export class UserRepository {
   public async upsert(user: UpsertUserRequestDto): Promise<UserEntity> {
     const userCreated = await this.prismaService.user.upsert({
       where: { uid: user.uid },
-      update: { name: user.name, email: user.email },
-      create: {
-        uid: user.uid,
-        name: user.name ?? '',
-        email: user.email,
-        coins: 0,
-      },
+      update: user,
+      create: user,
     });
 
     return plainToInstance(UserEntity, userCreated);

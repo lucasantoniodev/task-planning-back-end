@@ -1,4 +1,3 @@
-// src/auth/firebase-auth.guard.ts
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { admin } from '../../firebase/firebase-admin.config';
 import { plainToInstance } from 'class-transformer';

@@ -90,6 +90,7 @@ export class PlanningRoomGateway
       players: Array.from(room.players.values()).map((p) => ({
         id: p.id,
         name: p.name,
+        photoUrl: p.photoUrl,
         joinedAt: p.joinedAt,
       })),
     };

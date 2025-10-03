@@ -23,12 +23,18 @@ model PlanningRoom {
   @@map("planning_room")
 }
 
+enum TaskStatusEnum {
+  PENDING
+  COMPLETED
+}
+
 model Task {
-  id             String       @id @default(uuid())
+  id             String         @id @default(uuid())
   description    String
   points         Int
-  planningRoomId String       @map("planning_room_id")
-  PlanningRoom   PlanningRoom @relation(fields: [planningRoomId], references: [id])
+  status         TaskStatusEnum @default(PENDING)
+  planningRoomId String         @map("planning_room_id")
+  PlanningRoom   PlanningRoom   @relation(fields: [planningRoomId], references: [id])
 
   @@map("task")
 }

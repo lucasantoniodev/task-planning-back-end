@@ -8,6 +8,7 @@ import { PlanningRoomGateway } from './gateways/planning-room.gateway';
 import { TaskGateway } from './gateways/task.gateway';
 import { TaskModule } from '../task/task.module';
 import { AuthMiddleware } from '../../middlewares/auth.middleware';
+import { FindTaskByIdService } from '../task/services/find-task-by-id.service';
 
 @Module({
   imports: [TaskModule],
@@ -17,6 +18,7 @@ import { AuthMiddleware } from '../../middlewares/auth.middleware';
     FindByIdPlanningRoomService,
     PlanningRoomGateway,
     TaskGateway,
+    FindTaskByIdService,
   ],
   controllers: [CreatePlanningRoomController, FindByIdPlanningRoomController],
 })
