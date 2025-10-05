@@ -58,6 +58,7 @@ export class PlanningRoomGateway
 
     room.players.set(user.id, {
       id: user.id,
+      uid: user.uid,
       name: user.name,
       photoUrl: user.photoUrl,
       joinedAt: Date.now(),
@@ -89,6 +90,7 @@ export class PlanningRoomGateway
       id: room.id,
       players: Array.from(room.players.values()).map((p) => ({
         id: p.id,
+        uid: p.uid,
         name: p.name,
         photoUrl: p.photoUrl,
         joinedAt: p.joinedAt,
