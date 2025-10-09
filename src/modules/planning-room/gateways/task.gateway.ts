@@ -84,6 +84,7 @@ export class TaskGateway {
       });
     }
 
+    console.log(task);
     this.server.to(taskId).emit(`room:task:${taskId}`, task);
   }
 
@@ -101,7 +102,7 @@ export class TaskGateway {
     const task = this.taskState.get(taskId);
     if (task) {
       task.players = task.players.filter((player) => player.id !== user.id);
-      task.votes = task.votes.filter((v) => v.userUid !== user.uid);
+
       this.server.to(taskId).emit(`room:task:${taskId}`, task);
     }
   }
@@ -142,6 +143,10 @@ export class TaskGateway {
     const task = this.taskState.get(taskId);
     if (!task) {
       throw new WsException(`Task ${taskId} not found`);
+    }
+
+    if (task.revealed) {
+      return;
     }
 
     task.revealed = true;
